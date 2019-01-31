@@ -20,7 +20,8 @@ class BaseShopMixin(models.Model):
 
 class ShopMixin(BaseShopMixin):
 
-    stat = (('A', 'Active'),)
+    stat = (('A', 'Active'),
+            ('D', 'Deactive'))
 
     image = models.ImageField(upload_to='/media/shop_media')
     status = models.CharField(choices=stat, max_length=20)
