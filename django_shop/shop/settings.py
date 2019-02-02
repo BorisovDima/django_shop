@@ -42,6 +42,10 @@ INSTALLED_APPS = [
     'shop.apps.core',
     'shop.apps.order',
     'shop.apps.design',
+    'shop.apps.cart',
+    'rest_framework',
+    'django_filters',
+    'bootstrap4',
 
 ]
 
@@ -68,6 +72,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -118,8 +123,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/var/www/mysite.ru/static/'
 MEDIA_ROOT = '/home/borisov/django_store/shop_app/django_shop/media'
-MEDIA_URL = 'http://localhost/media/'
+MEDIA_URL = '/media/'
 
 
 
@@ -132,6 +138,10 @@ CACHES = {
         'LOCATION':'127.0.0.1:11211',
     }
 }
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+
 
 try:
     from .local_settings import *

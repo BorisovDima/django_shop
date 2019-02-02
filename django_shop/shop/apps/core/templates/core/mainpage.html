@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+{% load static %}
+{% load core_tags %}
+
+{% block bootstrap %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% bootstrap_messages %}
+{% endblock %}
+
+
+
+
+{% block head %}
+  {% navbar request=request %}
+
+
+<div class="modal" tabindex="-1" role="dialog" id="base-shop-modal">
+</div>
+{% detail_product_template %}
+
+{% endblock %}
+
+
+
+{% block body %}
+
+<div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+     <img src="{% static 'temp/x6ApfiOyXCg.jpg' %}">
+    </div>
+  <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+<form method="GET" action="">
+  {{ filter.form }}
+</form>
+
+<div class="row ">
+{% for obj in object_list %}
+<div class="col-3 px-0 pb-3" style="height: 250px">
+
+<div class="card" data-actions="detail-product" style="width: 18rem;">
+  <img src="..." class="card-img-top" alt="...">
+  <div class="card-body">
+      {{ obj }}
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+      <a class="btn btn-outline" data-action="detail-product" data-id="{{ obj.id }}">Detail</a>
+  </div>
+</div>
+</div>
+
+{% endfor %}
+</div>
+{% endblock %}
+
+
+{% block footer %}
+
+{% bootstrap_pagination page_obj size='small' %}
+<script src="{% static 'cart/js/check_cart.js' %}"></script>
+<script src="{% static 'cart/js/put-in-cart-product.js' %}"></script>
+<script src="{% static 'core/js/detail-product.js' %}"></script>
+{% endblock %}
