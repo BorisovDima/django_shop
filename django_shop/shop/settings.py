@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     'shop.apps.client',
     'shop.apps.core',
-    'shop.apps.order'
+    'shop.apps.order',
     'shop.apps.design',
 
 ]
@@ -118,11 +118,22 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+MEDIA_ROOT = '/home/borisov/django_store/shop_app/django_shop/media'
+MEDIA_URL = 'http://localhost/media/'
+
+
 
 AUTH_USER_MODEL = 'client.Client'
 
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION':'127.0.0.1:11211',
+    }
+}
+
 try:
-    from local_settings import *
+    from .local_settings import *
 except ImportError:
     pass
