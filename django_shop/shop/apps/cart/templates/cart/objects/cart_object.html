@@ -1,7 +1,7 @@
-{% verbatim %}
 
-<script id="list-my-cart" type="text/x-handlebars-template">
-      <div class="modal-dialog" role="document">
+
+
+<div class="modal-dialog  modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -9,13 +9,25 @@
         </button>
       </div>
       <div class="modal-body">
-          {{#each products }}
-        <p>Modal body text goes here.</p>
-        <a>{{ this.name  }}</a>
-          {{/each }}
-      </div>
-    </div>
-      </div>
-</script>
+          {% for obj, count, exceed in cart_obj.get_items %}
+          <div data-id="body-product-cart">
+          {% if exceed %}
+            WARNING!
+          <a class="text-danger">{{ obj.count }}</a>
+          {% endif %}
 
-{% endverbatim %}
+          <p>{{ obj }} <span data-id="counter-product-{{ obj.id }}">{{ count }}</span></p>
+          <a class="btn btn-outline-danger" data-id="{{ obj.id }}" data-action="delete-cart-product">delete</a>
+          <a class="btn btn-outline-danger" data-id="{{ obj.id }}" data-action="delete-cart-product-all">delete-all</a>
+          <a class="btn btn-outline-danger" data-id="{{ obj.id }}" data-action="order-product">add</a>
+            </div>
+          {% endfor %}
+      </div>
+        <div class="modal-footer">
+            <a href="{% url 'order:form-order' %}">Checkout</a>
+        </div>
+
+    </div>
+</div>
+
+

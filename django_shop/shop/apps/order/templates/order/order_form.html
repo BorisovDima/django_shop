@@ -1,0 +1,58 @@
+{% extends 'core/mainpage.html' %}
+{% load cart_tags %}
+
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+
+
+
+    <div class="col-7" style="background-color: #D8DFDC">
+
+{% with total=cart_obj.total_price %}
+        {% if total > 0 %}
+        <form method="POST" action="">
+            {% csrf_token %}
+    {{ form.as_p }}
+            <input type="submit">
+        </form>
+        {% else %}
+        <p> Cart is empty </p>
+{% endif %}
+
+    </div>
+    <div class="col">
+
+
+
+
+        {% for obj, count, exceed in cart_obj.get_items %}
+            {% if not exceed %}
+        <p>{{ obj }} {{ count }} На складе {{ obj.count }}</p>
+        {% endif %}
+    {% endfor %}
+
+
+        <p>{{ total }}</p>
+
+
+    </div>
+
+  </div>
+
+{% endwith %}
+</div>
+
+
+
+
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

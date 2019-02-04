@@ -19,6 +19,7 @@ class Category(ShopMixin):
         verbose_name_plural = _('Категории')
 
 class Product(ShopMixin):
+
     category = models.ForeignKey(Category, verbose_name=_('Категория товара'), on_delete=models.CASCADE)
     brand = models.ForeignKey(Brand, verbose_name=_('Бренд товара'), on_delete=models.CASCADE)
     price = models.FloatField(_('Цена товара'))

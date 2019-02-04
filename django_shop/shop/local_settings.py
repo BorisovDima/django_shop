@@ -1,4 +1,4 @@
-import os
+
 
 DATABASES = {
     'default': {
@@ -8,3 +8,6 @@ DATABASES = {
         'PASSWORD': '1488',
     }
 }
+
+
+CART_SESSION_KEY = 'orders_'

@@ -1,13 +1,10 @@
-$('[data-action="detail-product"]').on('click', function() {
+$(document).on('click', '[data-action="detail-product"]', function() {
     $.ajax({
-        url: '/api/detail-product/',
+        url: '/detail-product/',
         method: 'GET',
         data: {'pk': $(this).data('id')},
-        success: function(context) {
-              var source = $("#detail-template").html()
-              var template = Handlebars.compile(source)
-              var html = template(context)
-              $("#base-shop-modal").html(html)
+        success: function(json) {
+              $("#base-shop-modal").html(json['html'])
               $('#base-shop-modal').modal('show')
         },
         error: function(data) {

@@ -2,8 +2,8 @@ from django.urls import path
 from . import views, api
 
 urlpatterns = [
-    path('', views.MainPage.as_view(), name='main-page'),
-
-    path('api/detail-product/', api.DetailProductAPI.as_view({'get': 'retrieve'}), name='detail-product')
-
+    path('', views.MainPageView.as_view(), name='main-page'),
+    path('products/', views.MainPageView.as_view(), name='products'),
+    path('detail-product/', views.DetailProductView.as_view(), name='detail-product'),
+    path('detail/<slug:slug>/', views.DetailProductView.as_view(), name='detail-product-main')
 ]

@@ -1,6 +1,4 @@
 
-{% verbatim %}
-<script id="detail-template" type="text/x-handlebars-template">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -9,12 +7,11 @@
         </button>
       </div>
       <div class="modal-body">
-        <a>{{ name }}</a>
+          <a href="{% url 'detail-product-main' slug=product.slug %}">{{ product.name }}</a>
+        <a>{{ product.name }}</a>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary"  data-id="{{ id }}" data-action="order-product" >Order</button>
+        <button type="button" class="btn btn-secondary"  data-id="{{ product.id }}" data-action="order-product" >Order</button>
       </div>
     </div>
   </div>
-</script>
-{% endverbatim %}
