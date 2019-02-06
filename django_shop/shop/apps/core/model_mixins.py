@@ -1,13 +1,14 @@
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext as _
 
 from .utils import my_slugify
 
 
 class BaseShopMixin(models.Model):
 
-    data_create = models.DateTimeField(default=timezone.now)
-    data_update = models.DateTimeField(default=timezone.now)
+    data_create = models.DateTimeField(_('Дата создания'), default=timezone.now)
+    data_update = models.DateTimeField(_('Дата последнего изменения'), default=timezone.now)
 
 
     class Meta:

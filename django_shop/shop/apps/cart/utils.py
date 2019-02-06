@@ -3,6 +3,7 @@ from shop.apps.core.models import Product
 
 
 CART_SESSION_KEY = settings.CART_SESSION_KEY
+MAX_CART_SIZE = settings.MAX_CART_SIZE
 
 class CartObj:
     def __init__(self, request):
@@ -22,15 +23,20 @@ class CartObj:
        yield from self.orders.items()
 
     def action(self, event, *args):
-        getattr(self, event)(*args)
         self.session.modified = True
+        return getattr(self, event)(*args)
+
 
     def add(self, id):
-        self.orders[id] = self.orders[id]+1 if self.orders.get(id) else 1
+        if self.orders.get(id):
+            self.orders[id] += self.orders[id] < MAX_CART_SIZE
+        else:
+            self.orders[id] = 1
+        return self.exceed(Product.objects.get(id=id))
+
 
     def delete(self, id):
-        if self.orders[id] > 1:
-            self.orders[id] -= 1
+        self.orders[id] -= self.orders[id] > 1
 
     def delete_all(self, id):
         del self.orders[id]
@@ -52,4 +58,4 @@ class CartObj:
 
     @property
     def total_price(self):
-        return sum((float(obj.price) for obj, _, exceed in self.get_items() if not exceed))
+        return sum((float(obj.price)*count for obj, count, exceed in self.get_items() if not exceed))

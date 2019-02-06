@@ -15,10 +15,6 @@ function getURLParameter(sUrl, sParam) {
 
 $(document).ready(function(){
 
-        function get_filter() {
-
-
-        }
 
         function init() {
               console.log(document.body.querySelectorAll('.pagination > li > a'))
@@ -38,6 +34,7 @@ $(document).ready(function(){
 
        function load_product(page) {
                 var querystring = getFormData($('#filter-form'))
+                console.log(querystring)
                 querystring['page'] = page
                 $.ajax({
                         url: '/products/',
@@ -58,7 +55,7 @@ $(document).ready(function(){
 
 load_product(getURLParameter(window.location.href, 'page') || '1' )
 
-$('#test').on('click', function() {
+$('#filter-form-submit').on('click', function() {
     load_product('1')
 
 })

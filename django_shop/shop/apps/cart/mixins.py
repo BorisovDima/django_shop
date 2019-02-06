@@ -20,6 +20,7 @@ class CartMixin:
             self.cart.action(event)
         else:
             product_id = req.POST.get('id')
-            self.cart.action(event, product_id)
+            extra = self.cart.action(event, product_id)
             return {'count': self.cart.count,
-                    'count_order' : self.cart.count_order(product_id)}
+                    'count_order' : self.cart.count_order(product_id),
+                    'extra': extra}

@@ -25,7 +25,7 @@ SECRET_KEY = 'ddbw7-_dlmzfy5v+47sccnxk05ab81oc)4r-myyqk8wisl3ate'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -38,14 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'shop.apps.my_admin',
     'shop.apps.client',
     'shop.apps.core',
     'shop.apps.order',
     'shop.apps.design',
     'shop.apps.cart',
+    'shop.apps.payment',
+
     'rest_framework',
     'django_filters',
     'bootstrap4',
+    'paypal.standard.ipn'
 
 ]
 

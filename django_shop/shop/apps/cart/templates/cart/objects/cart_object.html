@@ -17,6 +17,9 @@
           {% endif %}
 
           <p>{{ obj }} <span data-id="counter-product-{{ obj.id }}">{{ count }}</span></p>
+              {% if obj.count < 4 %}
+                На складе только {{ obj.count }}
+              {% endif %}
           <a class="btn btn-outline-danger" data-id="{{ obj.id }}" data-action="delete-cart-product">delete</a>
           <a class="btn btn-outline-danger" data-id="{{ obj.id }}" data-action="delete-cart-product-all">delete-all</a>
           <a class="btn btn-outline-danger" data-id="{{ obj.id }}" data-action="order-product">add</a>

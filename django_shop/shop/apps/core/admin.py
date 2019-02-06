@@ -20,7 +20,3 @@ class BrandAdmin(AdminMixin, admin.ModelAdmin):
     list_display = ('name',)
 
 
-# @admin.register(Tag)
-# class ProductAdmin(admin.ModelAdmin):
-#    pass
-
