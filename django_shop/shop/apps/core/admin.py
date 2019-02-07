@@ -7,7 +7,7 @@ class AdminMixin:
 
 @admin.register(Product)
 class ProductAdmin(AdminMixin, admin.ModelAdmin):
-    list_display = ('name', 'category', 'brand', 'count', 'price')
+    list_display = ('name', 'category', 'brand', 'count', 'price', 'sales')
 
 
 @admin.register(Category)

@@ -69,7 +69,7 @@
           <td>{{ order.total_price }}</td>
   </tr>
 <hr>
-    <span class="{% if order.paid %}paid{% else %}pending{% endif %}">
+    <span>
       {% if order.paid %}Оплачен{% else %}Ожидает оплаты{% endif %}
     </span>
   </body>

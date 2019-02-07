@@ -1,5 +1,8 @@
 from django import template
 from django.conf import settings
+from shop.apps.order.models import OrderModel
+from shop.apps.core.utils import get_or_none
+
 
 register = template.Library()
 
@@ -22,4 +25,14 @@ def main_filter(**kwargs):
 @register.simple_tag
 def get_settings(conf):
     return getattr(settings, conf)
+
+@register.inclusion_tag('core/tags/continue_order.html')
+def continue_order(request):
+    data = request.session.get(settings.ORDER_SESSION_ID)
+    if data:
+        data = get_or_none(OrderModel, {'id': data})
+        if data and data.paid:
+            del request.session[settings.ORDER_SESSION_ID]
+            data = None
+    return {'continue': data}
 

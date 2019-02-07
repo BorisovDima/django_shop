@@ -1,9 +1,12 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.urls import reverse
+
 
 from shop.apps.core.model_mixins import BaseShopMixin
 from shop.apps.core.models import Product
 
+from uuid import uuid4
 
 
 class OrderModel(BaseShopMixin):
@@ -17,34 +20,40 @@ class OrderModel(BaseShopMixin):
     total_price = models.FloatField(_('Итоговая цена'), default=0)
     email = models.EmailField('Email', max_length=124)
 
+    def make_sales(self):
+        for item in self.orderitem_set.all():
+            item.type_product.sales += item.count
+            item.type_product.save(update_fields=['sales'])
+
+
     def set_items(self, cart):
         for product, count, exceed in cart.get_items():
             if not exceed:
                 price = product.price * count
-                OrderItem.objects.create(count=count, type_product=product, price=price, order=self, brand=product.brand)
+                OrderItem.objects.create(count=count, type_product=product, price=price, order=self)
                 self.total_price += price
         self.save(update_fields=['total_price'])
 
-    @property
-    def get_orders(self):
-        return self.objects.orderitem_set.all()
+
+    def get_absolute_url(self):
+        return reverse('order:order-pay-page')
 
     class Meta:
         ordering = ['-data_create']
         verbose_name = _('Заказ')
         verbose_name_plural = _('Заказы')
 
-    def get_absolute_url(self):
-        return '/'
+    def __str__(self):
+        return "Заказ № %d" % self.id
 
 class OrderItem(BaseShopMixin):
     count = models.PositiveIntegerField(_('Кол-во единиц товара'), default=1)
     type_product = models.ForeignKey(Product, verbose_name=_('Тип товара'), on_delete=models.PROTECT)
     price = models.FloatField(_('Цена'))
     order = models.ForeignKey(OrderModel, verbose_name=_("Ссылка на заказ"), on_delete=models.CASCADE)
-    brand = models.CharField(max_length=124)
 
-    def __repr__(self):
+
+    def __str__(self):
         return str(self.id)
 
 
@@ -54,6 +63,3 @@ class OrderItem(BaseShopMixin):
         verbose_name_plural = _('Единицы заказа')
 
 
-
-class PayRecord(BaseShopMixin):
-    pass

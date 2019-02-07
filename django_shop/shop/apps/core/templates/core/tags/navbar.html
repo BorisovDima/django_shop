@@ -1,4 +1,5 @@
 {% load cart_tags %}
+{% load continue_order from core_tags %}
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <a class="navbar-brand" href="#">Logo</a>
@@ -17,6 +18,9 @@
     <span class="navbar-text">
       <a>Search</a>
       <a>Login</a>
+
+      {% continue_order request %}
+
       <a id="my-cart" >Cart <span id="cart-counter">{% count_products_cart request %}</span></a>
     </span>
   </div>

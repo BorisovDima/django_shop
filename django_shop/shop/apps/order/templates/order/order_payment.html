@@ -1,0 +1,30 @@
+{% extends 'core/mainpage.html' %}
+{% load cart_tags %}
+{% load payment_tags %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+   {% for item in object.orderitem_set.all %}
+
+        {{ item.type_product }}
+        {{ item.count }}
+        {{ item.price }}
+
+   {% endfor %}
+    </div>
+
+
+
+{% paypal request object %}
+
+    </div>
+
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

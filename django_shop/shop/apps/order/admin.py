@@ -29,7 +29,7 @@ class OrderAdmin(ExportToCSVMixin, admin.ModelAdmin):
 @admin.register(OrderItem)
 class OrderItem(admin.ModelAdmin):
     list_display = ('id', 'price', 'data_create')
-
+    search_fields = ('=id',)
 
 
 

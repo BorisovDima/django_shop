@@ -1,9 +1,12 @@
 from django.views.generic import DetailView
 from django_filters.views import FilterView
 
+
 from .filters import ProductFilter
 from .mixins import KeyFromQueryStringMixin, JsonResponseMixin
 from .models import Product
+
+from celery import shared_task
 
 
 class MainPageView(JsonResponseMixin, FilterView):
@@ -28,3 +31,4 @@ class DetailProductView(JsonResponseMixin, KeyFromQueryStringMixin, DetailView):
     def get(self, req, *args, **kwarg):
         response = {'product': self.get_object()} if req.is_ajax() else super().get(req, *args, **kwarg)
         return response
+

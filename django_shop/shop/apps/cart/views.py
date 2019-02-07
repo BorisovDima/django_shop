@@ -1,5 +1,6 @@
 from django.views.generic import ListView
 
+
 from .mixins import CartMixin
 from shop.apps.core.mixins import JsonResponseMixin
 

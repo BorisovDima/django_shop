@@ -1,36 +1,15 @@
-from django.shortcuts import render, get_object_or_404
-from decimal import Decimal
-from django.conf import settings
-from django.urls import reverse
-from paypal.standard.forms import PayPalPaymentsForm
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView, View
+from django.utils.decorators import method_decorator
+
+from shop.apps.order.mixins import ExportToPDFMixin
 
 
-# Create your views here.
-def PaymentProcess(request):
-    # order_id = request.session.get('order_id')
-    # order = get_object_or_404(Order, id=order_id)
-    host = request.get_host()
 
-    paypal_dict = {
-        'business': settings.PAYPAL_RECEIVER_EMAIL,
-        'amount': '%.2f' % 144.0,
-        'item_name': 'Заказ {}'.format(2),
-        'invoice': str(2),
-        'currency_code': 'RUB',
-        'notify_url': 'http://{}{}'.format(host, reverse('paypal-ipn')),
-        'return_url': 'http://{}{}'.format(host, 'payment/done/'),
-        'cancel_return': 'http://{}{}'.format(host, 'payment/cancel/')
-    }
-
-    form = PayPalPaymentsForm(initial=paypal_dict)
-    return render(request, 'payment/test.html',{'form':form})
+@method_decorator(csrf_exempt, name='dispatch')
+class PaymentResult(TemplateView):
+    template_name = None
 
 
-@csrf_exempt
-def PaymentDone(request):
-    return render(request, 'payment/done.html')
 
-@csrf_exempt
-def PaymentCanceled(request):
-    return render(request, 'payment/canceled.html')
+
