@@ -40,3 +40,13 @@ EMAIL_HOST = 'smtp.mail.ru'
 EMAIL_HOST_USER = 'dmitriy_shvidkiy@mail.ru'
 EMAIL_HOST_PASSWORD = '19960213Z26a'
 EMAIL_PORT = 465
+
+######### form ###########################
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+################### pay #####################
+
+CUR_CURRENCY = '$'
+
+CUR_CURRENCY_COD = 'USD'

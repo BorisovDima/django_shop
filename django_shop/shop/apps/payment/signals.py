@@ -3,13 +3,15 @@ from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.conf import settings
 
-
+from .models import PayRecord
 from shop.apps.order.models import OrderModel
 from shop.apps.core.tasks import sendler_email
 
 from paypal.standard.models import ST_PP_COMPLETED
 from paypal.standard.ipn.signals import valid_ipn_received
+import logging
 
+logger = logging.getLogger(__name__)
 
 @receiver(valid_ipn_received)
 def done_paypal(sender, **kwargs):
@@ -25,4 +27,7 @@ def done_paypal(sender, **kwargs):
                         'Дорогой, %s, вы успешно сделали заказ. Номер вашего заказа %s' % (order.first_name, order.id),
                         settings.DEFAULT_FROM_EMAIL, [client_email], pdf_data=html)
 
+    client = "%s %s" % (order.first_name, order.last_name)
+    PayRecord.objects.create(client=client, payment_system='paypal', price=order.total_price)
+    logger.info('Payment Completed. Order №%s' % order.id)
 

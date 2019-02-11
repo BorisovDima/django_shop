@@ -17,7 +17,6 @@ $(document).ready(function(){
 
 
         function init() {
-              console.log(document.body.querySelectorAll('.pagination > li > a'))
               document.body.querySelectorAll('.pagination > li > a').
               forEach( function(event){
                    var href = event.href
@@ -34,8 +33,8 @@ $(document).ready(function(){
 
        function load_product(page) {
                 var querystring = getFormData($('#filter-form'))
-                console.log(querystring)
                 querystring['page'] = page
+                console.log(querystring)
                 $.ajax({
                         url: '/products/',
                         method: 'GET',
@@ -67,8 +66,31 @@ function getFormData($form){
     $.map(unindexed_array, function(n, i){
         indexed_array[n['name']] = n['value'];
     });
+    indexed_array['category'] = $('#id_category').val()
+    indexed_array['name'] = $('#id_name').val()
+    indexed_array['brand'] = $('#id_brand').val()
+
     return indexed_array;
 }
+
+
+$('#id_name').keyup(function(e){
+    if(e.keyCode == 13) {
+       load_product('1')
+    }
+});
+
+$('#id_category').change(function(e){
+        load_product('1')
+});
+
+
+$('#id_brand').change(function(e){
+       load_product('1')
+});
+
+
+
 
 
 })

@@ -1,6 +1,6 @@
 from django.conf import settings
-from shop.apps.core.models import Product
 
+from shop.apps.core.models import Variant
 
 CART_SESSION_KEY = settings.CART_SESSION_KEY
 MAX_CART_SIZE = settings.MAX_CART_SIZE
@@ -14,17 +14,17 @@ class CartObj:
 
     def get_items(self):
         if not self.items:
-            pk = [key for key,_ in self]
-            self.items = Product.objects.filter(id__in=pk)
+            pk = [key for key, _ in self]
+            self.items = Variant.objects.filter(id__in=pk)
         for p in self.items:
             yield p, self.orders[str(p.id)], self.exceed(p)
 
     def __iter__(self):
        yield from self.orders.items()
 
-    def action(self, event, *args):
+    def action(self, event, id):
         self.session.modified = True
-        return getattr(self, event)(*args)
+        return getattr(self, event)(id)
 
 
     def add(self, id):
@@ -32,8 +32,6 @@ class CartObj:
             self.orders[id] += self.orders[id] < MAX_CART_SIZE
         else:
             self.orders[id] = 1
-        return self.exceed(Product.objects.get(id=id))
-
 
     def delete(self, id):
         self.orders[id] -= self.orders[id] > 1
@@ -41,12 +39,11 @@ class CartObj:
     def delete_all(self, id):
         del self.orders[id]
 
-    def clear(self):
+    def clear(self, _):
         self.orders.clear()
 
     def exceed(self, prod):
         return prod.count < self.orders[str(prod.id)]
-
 
     def count_order(self, id):
         return self.orders.get(id)

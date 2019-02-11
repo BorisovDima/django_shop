@@ -1,11 +1,9 @@
 from django.db import models
 from django.utils.translation import gettext as _
 
-from .model_mixins import BaseShopMixin, ShopMixin
+from .model_mixins import BaseShopMixin, ShopMixin, CurrencyBaseShopMixin
 
 
-class Tag(BaseShopMixin):
-    pass
 
 
 class Brand(ShopMixin):
@@ -18,7 +16,8 @@ class Category(ShopMixin):
         verbose_name = _('Категория')
         verbose_name_plural = _('Категории')
 
-class Product(ShopMixin):
+
+class Variant(CurrencyBaseShopMixin):
 
     CHOISE_SIZE= (('S','S'),
                   ('M','M'),
@@ -29,27 +28,43 @@ class Product(ShopMixin):
                   ('4XL','4XL'),
                   ('5XL','5XL'))
 
-    features = models.CharField(max_length=524, null=True, blank=True)
-    public_name = models.CharField(max_length=124, null=True, blank=True)
-    size = models.CharField(_('Размер товара'), max_length=15, choices=CHOISE_SIZE, null=True, blank=True)
-    category = models.ForeignKey(Category, verbose_name=_('Категория товара'), on_delete=models.CASCADE)
-    brand = models.ForeignKey(Brand, verbose_name=_('Бренд товара'), on_delete=models.CASCADE)
-    price = models.FloatField(_('Цена товара'))
-    count = models.IntegerField(_('Кол-во единиц товара'), default=1)
+    size = models.CharField(_('Размер товара'), max_length=5, choices=CHOISE_SIZE, null=True, blank=True)
+
+    count = models.PositiveIntegerField(_('Кол-во единиц товара'), default=1)
     sales = models.PositiveIntegerField(_('Кол-во проданных единиц товара'), default=0)
+    price = models.FloatField(_('Цена товара'))
 
-    def save(self, *args, **kwargs):
-        if self.size:
-            self.public_name = self.name
-            self.name = '%s-%s' % (self.name, self.size)
-        super().save(*args, **kwargs)
+    product = models.ForeignKey('Product', verbose_name=_('Товар'), on_delete=models.CASCADE)
 
-    @property
-    def get_name(self):
-        return self.public_name if self.public_name else self.name
+    def __str__(self):
+        return '%s-%s' % (self.product.name, self.size or 'main')
 
     class Meta:
         ordering = ['-sales']
+
+class Product(ShopMixin):
+
+    features = models.CharField(_('Особенности товара'), max_length=524, null=True, blank=True)
+    category = models.ForeignKey(Category, verbose_name=_('Категория товара'), on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, verbose_name=_('Бренд товара'), on_delete=models.CASCADE)
+    average_price = models.FloatField(_('Средняя цена товара'), help_text=_('Для поиска'))
+    image2 = models.ImageField(upload_to='shop_media/', blank=True, null=True)
+    image3 = models.ImageField(upload_to='shop_media/', blank=True, null=True)
+
+
+    def get_sales(self):
+        return sum((i.sales for i in self.variant_set.all()))
+
+    @property
+    def get_size(self):
+        return self.variant_set.exclude(size=None)
+
+    @property
+    def get_main_variant(self):
+        return self.variant_set.first()
+
+    class Meta:
+        ordering = ['-average_price']
         verbose_name = _('Товар')
         verbose_name_plural = _('Товары')
 

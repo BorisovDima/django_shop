@@ -24,7 +24,7 @@
   <table width="100%">
     <tr>
       <th>Создан</th>
-      <td>{{ object.data_create }}</td>
+      <td>{{ object.date_create }}</td>
     </tr>
     <tr>
       <th>Заказчик</th>
@@ -67,7 +67,7 @@
           {% for item in object.orderitem_set.all  %}
             <tr>
               <td>{{ item.type_product.name }}</td>
-              <td>{{ item.type_product.price }} руб.</td>
+              <td>{{ item.variant_product.price }} руб.</td>
               <td>{{ item.count }}</td>
               <td>{{ item.price }} руб.</td>
             </tr>

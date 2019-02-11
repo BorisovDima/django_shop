@@ -19,6 +19,12 @@ class JsonResponseMixin:
         return data
 
 
+    def get(self, req, *args, **kwarg):
+        response = super().get(req, *args, **kwarg)
+        if req.is_ajax():
+            response = self.get_json_data()
+        return response
+
 
 class KeyFromQueryStringMixin:
     lookup_query_key = 'pk'

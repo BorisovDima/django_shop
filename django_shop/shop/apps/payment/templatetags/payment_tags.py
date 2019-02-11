@@ -16,7 +16,7 @@ def paypal(request, order):
         'amount': '%.2f' % order.total_price,
         'item_name': 'Заказ %d' % order.id,
         'invoice': str(order.id),
-        'currency_code': 'RUB',
+        'currency_code': settings.CUR_CURRENCY_COD,
         'notify_url': 'http://{}{}'.format(host, reverse('paypal-ipn')),
         'return_url': 'http://{}{}'.format(host, reverse('payment:done')),
         'cancel_return': 'http://{}{}'.format(host, reverse('payment:cancel'))
@@ -24,3 +24,4 @@ def paypal(request, order):
 
     form = PayPalPaymentsForm(initial=paypal_dict)
     return {'form': form}
+

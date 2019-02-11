@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
 
     'shop.apps.my_admin',
     'shop.apps.client',
@@ -49,7 +50,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'bootstrap4',
-    'paypal.standard.ipn'
+    'paypal.standard.ipn',
+    'crispy_forms',
 
 ]
 
@@ -145,7 +147,85 @@ CACHES = {
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
+############## LOGGING ##############################
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
 
+    'root': {
+        'handlers': ['log_file', 'error_log'],
+        'level': 'INFO',
+        'formatter': 'verbose',
+    },
+
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(name)s.%(funcName)s %(message)s'
+
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+
+    },
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+      'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+    },
+
+    'handlers': {
+        'log_file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'simple',
+            'backupCount': 1,
+            'maxBytes': 16*1000000,
+            'filename': os.path.join(BASE_DIR, 'logs.log'),
+        },
+        'error_log': {
+            'level': 'ERROR',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'formatter': 'verbose',
+            'backupCount': 1,
+            'maxBytes': 16 * 1000000,
+            'filename': os.path.join(BASE_DIR, 'error.log'),
+
+        },
+        'console': {
+            'level': 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+            'filters': ['require_debug_true']
+        }
+
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['log_file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        }
+        },
+}
+
+
+
+
+
+
+
+
+##############################
 
 try:
     from .local_settings import *

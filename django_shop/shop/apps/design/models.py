@@ -1,12 +1,12 @@
 from django.db import models
 
 
-class MainDesign():
-    pass
+class Slides(models.Model):
+    image = models.ImageField(upload_to='desing/slides/')
 
+    @property
+    def url(self):
+        return self.image.url
 
-class Background():
-    pass
-
-class Sidebar():
-    pass
+    def __str__(self):
+        return self.image.name

@@ -2,14 +2,29 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django.urls import reverse
 
+from shop.apps.core.model_mixins import BaseShopMixin, CurrencyBaseShopMixin
+from shop.apps.core.models import Variant
 
-from shop.apps.core.model_mixins import BaseShopMixin
-from shop.apps.core.models import Product
+import logging
 
-from uuid import uuid4
+logger = logging.getLogger(__name__)
 
 
-class OrderModel(BaseShopMixin):
+
+class Shipping(CurrencyBaseShopMixin):
+    name = models.CharField(max_length=124)
+    price = models.IntegerField()
+    contact = models.CharField(max_length=124)
+    active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name_plural = _('Службы доставки')
+
+class OrderModel(CurrencyBaseShopMixin):
+
     first_name = models.CharField(_('Имя заказчика'), max_length=64)
     last_name = models.CharField(_('Фамилия заказчика'), max_length=64)
     address = models.CharField(_('Адресс заказчика'), max_length=200)
@@ -19,27 +34,48 @@ class OrderModel(BaseShopMixin):
     paid = models.BooleanField(_('Оплачено'), default=False)
     total_price = models.FloatField(_('Итоговая цена'), default=0)
     email = models.EmailField('Email', max_length=124)
+    taxes = models.FloatField(default=0)
+    shipping = models.ForeignKey(Shipping, verbose_name=_('Способ доставки'), on_delete=models.SET_NULL,
+                                        null=True)
 
     def make_sales(self):
         for item in self.orderitem_set.all():
-            item.type_product.sales += item.count
-            item.type_product.save(update_fields=['sales'])
+            item.variant_product.sales += item.count
+            item.variant_product.count -= item.count
+            item.variant_product.save(update_fields=['sales', 'count'])
+            logger.info('Sales product %s variant %s: sales + %s, count - %s: sales %s, count %s' %
+                        (item.type_product, item.variant_product, item.count, item.count,
+                         item.variant_product.sales, item.variant_product.count))
 
+
+    def set_ship_price(self):
+        self.total_price += self.shipping.price
+
+
+    def set_taxes_price(self):
+        # compute taxes
+        self.total_price += self.taxes
+
+    def get_full_address(self):
+        return '%s, %s, %s, %s' % (self.country, self.city, self.address, self.postal_code)
 
     def set_items(self, cart):
-        for product, count, exceed in cart.get_items():
+        for variant, count, exceed in cart.get_items():
             if not exceed:
-                price = product.price * count
-                OrderItem.objects.create(count=count, type_product=product, price=price, order=self)
+                price = variant.price * count
+                OrderItem.objects.create(count=count, variant_product=variant, price=price, order=self)
                 self.total_price += price
+        self.set_ship_price()
+        self.set_taxes_price()
         self.save(update_fields=['total_price'])
+
 
 
     def get_absolute_url(self):
         return reverse('order:order-pay-page')
 
     class Meta:
-        ordering = ['-data_create']
+        ordering = ['-date_create']
         verbose_name = _('Заказ')
         verbose_name_plural = _('Заказы')
 
@@ -48,14 +84,16 @@ class OrderModel(BaseShopMixin):
 
 class OrderItem(BaseShopMixin):
     count = models.PositiveIntegerField(_('Кол-во единиц товара'), default=1)
-    type_product = models.ForeignKey(Product, verbose_name=_('Тип товара'), on_delete=models.PROTECT)
+    variant_product = models.ForeignKey(Variant, verbose_name=_('Тип товара'), on_delete=models.PROTECT)
     price = models.FloatField(_('Цена'))
     order = models.ForeignKey(OrderModel, verbose_name=_("Ссылка на заказ"), on_delete=models.CASCADE)
-
 
     def __str__(self):
         return str(self.id)
 
+    @property
+    def type_product(self):
+        return self.variant_product.product
 
     class Meta:
         ordering = ['-price']

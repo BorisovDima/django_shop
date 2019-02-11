@@ -1,7 +1,10 @@
 {% if continue %}
 
-<h1>У вас есть незаклнченный заказ </h1>
+<h5 class="badge badge-danger">У вас есть незаклнченный заказ </h5>
 <a href="{% url 'order:order-pay-page'  %}">продолжить?</a>
+<i class="material-icons">
+notification_important
+</i>
 
 
 {% endif %}

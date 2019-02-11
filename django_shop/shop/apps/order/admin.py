@@ -2,8 +2,11 @@ from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
 
-from .models import OrderModel, OrderItem
+from .models import OrderModel, OrderItem, Shipping
 from .mixins import ExportToCSVMixin
+
+
+
 
 
 def OrderDetail(order):
@@ -28,11 +31,13 @@ class OrderAdmin(ExportToCSVMixin, admin.ModelAdmin):
 
 @admin.register(OrderItem)
 class OrderItem(admin.ModelAdmin):
-    list_display = ('id', 'price', 'data_create')
+    list_display = ('id', 'price', 'date_create')
     search_fields = ('=id',)
 
 
-
+@admin.register(Shipping)
+class ShippingAdmin(admin.ModelAdmin):
+    pass
 
 
 

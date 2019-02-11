@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import PayRecord
 
-# Register your models here.
+# @admin.register(PayRecord)
+# class PayReordAdmin(admin.ModelAdmin):
+#     list_display = ('payment_system', 'client', 'price', 'date')

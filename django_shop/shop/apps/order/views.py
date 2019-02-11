@@ -1,25 +1,27 @@
-from django.views.generic import CreateView, DetailView, View
+from django.views.generic import CreateView, DetailView
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
 from .models import OrderModel
 from shop.apps.cart.mixins import CartMixin
+from .forms import OrderForm
 
-
+O_I = settings.ORDER_SESSION_ID
 
 
 class OrderView(CartMixin, CreateView):
     cart_context = True
     model = OrderModel
-    fields = ['first_name', 'last_name', 'email', 'country', 'city', 'address',  'postal_code']
+    form_class = OrderForm
     template_name = 'order/order_form.html'
-
 
     def form_valid(self, form):
         response = super().form_valid(form)
         self.object.set_items(self.cart)
         self.cart_dispatch(self.request, 'clear')
-        self.request.session[settings.ORDER_SESSION_ID] = self.object.id
+        if self.request.session.get(O_I):
+            OrderModel.objects.filter(id=self.request.session[O_I]).delete()
+        self.request.session[O_I] = self.object.id
         return response
 
 
@@ -27,7 +29,7 @@ class OrderPaymentPageView(DetailView):
     template_name = 'order/order_payment.html'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(OrderModel, **{'id': self.request.session.get(settings.ORDER_SESSION_ID),
+        return get_object_or_404(OrderModel, **{'id': self.request.session.get(O_I),
                                                 'paid': False})
 
 
