@@ -6,6 +6,10 @@ DATABASES = {
         'NAME': 'django_shop',
         'USER': 'root',
         'PASSWORD': '1488',
+        'TEST': {
+            'CHARSET': 'utf8',
+            'COLLATION': 'utf8_general_ci',
+        }
     }
 }
 
