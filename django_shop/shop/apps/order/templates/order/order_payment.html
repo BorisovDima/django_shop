@@ -62,7 +62,7 @@
 
 
                                             <a class="font-weight-bold text-dark">{{ item.type_product.name }}</a>
-                                             <span>{{ item.price }}{% get_settings 'CUR_CURRENCY' %}</span>
+                                             <span class="pl-4">{% widthratio item.price 1 item.count %}{% get_settings 'CUR_CURRENCY' %}</span>
                                             {% if item.variant_product.size %}
                                                 <ul class="list-unstyled">
                                                     <li>

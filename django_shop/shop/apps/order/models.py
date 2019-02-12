@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from django.urls import reverse
+from django.utils import timezone
 
 from shop.apps.core.model_mixins import BaseShopMixin, CurrencyBaseShopMixin
 from shop.apps.core.models import Variant
@@ -42,7 +43,8 @@ class OrderModel(CurrencyBaseShopMixin):
         for item in self.orderitem_set.all():
             item.variant_product.sales += item.count
             item.variant_product.count -= item.count
-            item.variant_product.save(update_fields=['sales', 'count'])
+            item.variant_product.last_sale = timezone.now()
+            item.variant_product.save(update_fields=['sales', 'count', 'last_sale'])
             logger.info('Sales product %s variant %s: sales + %s, count - %s: sales %s, count %s' %
                         (item.type_product, item.variant_product, item.count, item.count,
                          item.variant_product.sales, item.variant_product.count))

@@ -2,6 +2,8 @@ from django.conf import settings
 
 from shop.apps.core.models import Variant
 
+
+
 CART_SESSION_KEY = settings.CART_SESSION_KEY
 MAX_CART_SIZE = settings.MAX_CART_SIZE
 
@@ -23,30 +25,33 @@ class CartObj:
        yield from self.orders.items()
 
     def action(self, event, id):
+        """type(id) == str"""
         self.session.modified = True
-        return getattr(self, event)(id)
+        return getattr(self, '_'+event)(str(id))
 
 
-    def add(self, id):
+    def _add(self, id):
         if self.orders.get(id):
             self.orders[id] += self.orders[id] < MAX_CART_SIZE
         else:
             self.orders[id] = 1
 
-    def delete(self, id):
+    def _delete(self, id):
         self.orders[id] -= self.orders[id] > 1
 
-    def delete_all(self, id):
+    def _delete_all(self, id):
         del self.orders[id]
+        if self.items: self.items = self.items.exclude(id=id)
 
-    def clear(self, _):
+    def _clear(self, _):
         self.orders.clear()
+        self.items = None
 
-    def exceed(self, prod):
-        return prod.count < self.orders[str(prod.id)]
+    def exceed(self, variant):
+        return variant.count < self.orders[str(variant.id)]
 
     def count_order(self, id):
-        return self.orders.get(id)
+        return self.orders.get(str(id))
 
     @property
     def count(self):

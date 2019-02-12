@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from django.utils import timezone
 
 from .model_mixins import BaseShopMixin, ShopMixin, CurrencyBaseShopMixin
 
@@ -33,6 +34,7 @@ class Variant(CurrencyBaseShopMixin):
     count = models.PositiveIntegerField(_('Кол-во единиц товара'), default=1)
     sales = models.PositiveIntegerField(_('Кол-во проданных единиц товара'), default=0)
     price = models.FloatField(_('Цена товара'))
+    last_sale = models.DateTimeField(default=timezone.now)
 
     product = models.ForeignKey('Product', verbose_name=_('Товар'), on_delete=models.CASCADE)
 

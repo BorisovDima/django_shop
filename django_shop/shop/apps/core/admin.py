@@ -1,5 +1,10 @@
 from django.contrib import admin
+from django.conf import settings
+from django.utils.translation import gettext as _
+from django.db.models import Sum
+
 from .models import Product, Category, Brand, Variant
+
 
 
 class AdminMixin:
@@ -11,14 +16,21 @@ class VariantInline(admin.TabularInline):
     model = Variant
     extra = 0
 
-def average_sales(product):
-    return str(product.get_sales())
 
 @admin.register(Product)
 class ProductAdmin(AdminMixin, admin.ModelAdmin):
-    list_display = ('name', 'category', 'brand',  'average_price', 'features', average_sales)
-    ordering = ['-variant__sales']
+    list_display = ('name', 'category', 'brand',  'average_price', 'features', 'average_sales', 'last_sale')
+    ordering = ['-variant__sales', '-variant__last_sale']
     inlines = [VariantInline]
+    list_filter = ['date_create', 'variant__last_sale']
+
+    def average_sales(self, product):
+        return str(product.get_sales())
+
+    def last_sale(self, product):
+        v = product.variant_set.order_by('-last_sale').first()
+        return v.last_sale.strftime(settings.ADMIN_DATE_FORMAT)
+
 
     def save_related(self, request, form, formsets, change):
         form.save_m2m()
@@ -30,15 +42,27 @@ class ProductAdmin(AdminMixin, admin.ModelAdmin):
 
 @admin.register(Category)
 class CategoryAdmin(AdminMixin, admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'sales')
+
+
+    def sales(self, category):
+        s = category.product_set.aggregate(sales=Sum('variant__sales'))
+        return str(s['sales'])
+
 
 
 @admin.register(Brand)
 class BrandAdmin(AdminMixin, admin.ModelAdmin):
-    list_display = ('name',)
+    list_display = ('name', 'sales')
 
 
-admin.site.register(Variant)
+    def sales(self, brand):
+        s = brand.product_set.aggregate(sales=Sum('variant__sales'))
+        return str(s['sales'])
+
+
+
+
 
 
 

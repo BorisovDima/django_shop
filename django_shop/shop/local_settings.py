@@ -20,7 +20,7 @@ STATIC_ROOT = '/var/www/shopdjango.ru/static'
 CART_SESSION_KEY = 'orders_'
 ORDER_SESSION_ID = 'order_id'
 
-MAX_CART_SIZE = 10
+MAX_CART_SIZE = 100
 
 PAYPAL_RECEIVER_EMAIL = 'dmitriy_shvidkiy@mail.ru'
 PAYPAL_TEST = True
@@ -54,3 +54,8 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 CUR_CURRENCY = '$'
 
 CUR_CURRENCY_COD = 'USD'
+
+################# admin ###############
+
+
+ADMIN_DATE_FORMAT = '%d/%m/%Y %H.%M'
