@@ -85,7 +85,7 @@ class OrderModel(CurrencyBaseShopMixin):
         return "Заказ № %d" % self.id
 
 class OrderItem(BaseShopMixin):
-    count = models.PositiveIntegerField(_('Кол-во единиц товара'), default=1)
+    count = models.IntegerField(_('Кол-во единиц товара'), default=1)
     variant_product = models.ForeignKey(Variant, verbose_name=_('Тип товара'), on_delete=models.PROTECT)
     price = models.FloatField(_('Цена'))
     order = models.ForeignKey(OrderModel, verbose_name=_("Ссылка на заказ"), on_delete=models.CASCADE)

@@ -51,8 +51,14 @@ $(document).ready(function(){
                  })
              }
 
+var start = getURLParameter(window.location.href, 'page')
+init()
 
-load_product(getURLParameter(window.location.href, 'page') || '1' )
+ if (start){
+    load_product(start)
+ }
+
+//load_product(getURLParameter(window.location.href, 'page') || '1' )
 
 $('#filter-form-submit').on('click', function() {
     load_product('1')

@@ -1,10 +1,13 @@
 {% load bootstrap4 %}
 {% load get_settings from core_tags %}
+{% load cache %}
+
 
 
 <div class="row" data-actions="detail-product" >
 
     {% for obj in object_list %}
+    {% cache 300 mainpage_product obj.id %}
     <div class="card-column col-6 col-sm-6 col-md-4 col-lg-3 w-20 my-3 d-flex align-items-stretch justify-content-around">
             <a class="hover card border-0 shadow-none card-product text-left" data-action="detail-product" data-id="{{ obj.id }}">
         <div class="card-img text-center d-flex align-items-center justify-content-center">
@@ -21,6 +24,7 @@
         </div>
             </a>
     </div>
+    {% endcache %}
     {% endfor %}
 </div>
 

@@ -35,4 +35,3 @@ def continue_order(request):
             data = None
     return {'continue': data}
 
-

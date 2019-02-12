@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from django.utils import timezone
 
-from .model_mixins import BaseShopMixin, ShopMixin, CurrencyBaseShopMixin
+from .model_mixins import  ShopMixin, CurrencyBaseShopMixin
 
 
 
@@ -31,8 +31,8 @@ class Variant(CurrencyBaseShopMixin):
 
     size = models.CharField(_('Размер товара'), max_length=5, choices=CHOISE_SIZE, null=True, blank=True)
 
-    count = models.PositiveIntegerField(_('Кол-во единиц товара'), default=1)
-    sales = models.PositiveIntegerField(_('Кол-во проданных единиц товара'), default=0)
+    count = models.IntegerField(_('Кол-во единиц товара'), default=1)
+    sales = models.IntegerField(_('Кол-во проданных единиц товара'), default=0)
     price = models.FloatField(_('Цена товара'))
     last_sale = models.DateTimeField(default=timezone.now)
 
@@ -56,6 +56,10 @@ class Product(ShopMixin):
 
     def get_sales(self):
         return sum((i.sales for i in self.variant_set.all()))
+
+    def get_count(self):
+        return sum(v.count for v in self.variant_set.all())
+
 
     @property
     def get_size(self):

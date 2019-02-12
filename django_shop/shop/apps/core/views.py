@@ -1,7 +1,6 @@
 from django.views.generic import DetailView
 from django_filters.views import FilterView
 
-
 from .filters import ProductFilter
 from .mixins import KeyFromQueryStringMixin, JsonResponseMixin
 from .models import Product
@@ -16,7 +15,7 @@ class MainPageView(JsonResponseMixin, FilterView):
     paginate_by = 8
 
     def get_json_data(self):
-        return super().get_context_data(filter=self.filterset, object_list=self.object_list)
+        return super().get_context_data(object_list=self.object_list)
 
 
 class DetailProductView(JsonResponseMixin, KeyFromQueryStringMixin, DetailView):
@@ -25,5 +24,5 @@ class DetailProductView(JsonResponseMixin, KeyFromQueryStringMixin, DetailView):
     template_name = 'core/detail-product-main.html'
 
     def get_json_data(self):
-        return {'product': self.get_object()}
+        return {'product': self.object}
 
