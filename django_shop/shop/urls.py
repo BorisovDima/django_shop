@@ -23,7 +23,7 @@ urlpatterns = [
     path('payment/', include('shop.apps.payment.urls')),
     path('', include('shop.apps.core.urls')),
     path('', include('shop.apps.order.urls')),
-    path('cart/', include('shop.apps.cart.urls')),
+    path('api/cart/', include('shop.apps.cart.urls')),
 
     path('paypal/', include('paypal.standard.ipn.urls')),
 ]

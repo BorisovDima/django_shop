@@ -1,29 +1,15 @@
-from django.template.loader import render_to_string
 from django.http.response import JsonResponse
 
 class JsonResponseMixin:
-    render_key = 'html'
-    render_template = None
-
-    def get_extra_json(self):
-        return {}
+    template_name = None
 
     def dispatch(self, request, *args, **kwargs):
         data = super().dispatch(request, *args, **kwargs)
-        if request.is_ajax():
-            if self.render_template:
-                data = render_to_string(self.render_template, data, request)
-            json_context = {self.render_key: data}
-            json_context.update(self.get_extra_json())
-            data = JsonResponse(json_context)
-        return data
+        return data if not request.is_ajax() else JsonResponse(data)
 
 
     def get(self, req, *args, **kwarg):
-        response = super().get(req, *args, **kwarg)
-        if req.is_ajax():
-            response = self.get_json_data()
-        return response
+        return super().get(req, *args, **kwarg) if not req.is_ajax() else self.get_json_data(req, *args, **kwarg)
 
 
 class KeyFromQueryStringMixin:

@@ -1,6 +1,7 @@
 from django.http.response import HttpResponse
 from django.template.loader import render_to_string
 
+
 import csv
 from weasyprint import HTML, CSS
 

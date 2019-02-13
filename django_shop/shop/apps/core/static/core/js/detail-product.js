@@ -1,6 +1,6 @@
 $(document).on('click', '[data-action="detail-product"]', function() {
     $.ajax({
-        url: '/detail-product/',
+        url: '/api/detail-product/',
         method: 'GET',
         data: {'pk': $(this).data('id')},
         success: function(json) {

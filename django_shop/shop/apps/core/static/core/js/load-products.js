@@ -36,7 +36,7 @@ $(document).ready(function(){
                 querystring['page'] = page
                 console.log(querystring)
                 $.ajax({
-                        url: '/products/',
+                        url: '/api/products/',
                         method: 'GET',
                         data: querystring,
                         success: function(json) {

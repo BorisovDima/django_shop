@@ -2,11 +2,10 @@ $(document).on('click', '[data-action="order-product"]', function() {
     var id = $(this).data('id')
     var element = $(this).closest('[data-id="body-product-cart"]')
     $.ajax({
-        url: '/cart/put/',
+        url: '/api/cart/put/',
         method: 'POST',
         data: {'id': id},
         success: function(data) {
-            var data = data['count']
 
             $('#cart-counter').text(data['count'])
 

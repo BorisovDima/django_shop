@@ -1,6 +1,6 @@
 $('#my-cart').on('click', function(){
         $.ajax({
-            url: '/cart/check/',
+            url: '/api/cart/check/',
             method: 'GET',
             success: function(json) {
               $("#my-cart-modal").html(json['html'])
