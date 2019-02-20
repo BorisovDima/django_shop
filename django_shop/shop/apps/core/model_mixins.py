@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.conf import settings
 
 from .utils import my_slugify
 
@@ -8,6 +9,10 @@ from .utils import my_slugify
 
 class BaseShopMixin(models.Model):
     date_create = models.DateTimeField(_('Дата создания'), default=timezone.now)
+
+    def get_date_create(self):
+        return self.date_create.strftime(settings.ADMIN_DATE_FORMAT)
+    get_date_create.short_description = 'Дата создания'
 
     class Meta:
         abstract = True

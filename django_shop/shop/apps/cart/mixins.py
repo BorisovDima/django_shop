@@ -2,19 +2,13 @@ from .utils import CartObj
 from shop.apps.core.models import Variant
 
 class CartMixin:
-    cart_context = False
     event = None
     product_model = Variant
 
     def dispatch(self, request, *args, **kwargs):
         self.cart = CartObj(request)
+        self.extra_context = {'cart_obj': self.cart}
         return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self, **kwargs):
-        context = {'cart_obj': self.cart}
-        if self.cart_context:
-            context.update(super().get_context_data(**kwargs))
-        return context
 
     def cart_dispatch(self, req, event, *args):
         product_id = req.POST.get('id')

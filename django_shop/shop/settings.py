@@ -15,17 +15,26 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+############### dotenv ############3
+
+from dotenv import load_dotenv
+
+load_dotenv(os.path.join(BASE_DIR, os.environ.get('ENV_FILE') or 'django_shop.env'))
+
+
+
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'ddbw7-_dlmzfy5v+47sccnxk05ab81oc)4r-myyqk8wisl3ate'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+print(os.environ.get('HOST'))
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [os.environ.get('HOST') or '*']
 
 
 # Application definition
@@ -39,8 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
 
-    'shop.apps.my_admin',
-    'shop.apps.client',
+    'shop.apps.users',
     'shop.apps.core',
     'shop.apps.order',
     'shop.apps.design',
@@ -70,7 +78,7 @@ ROOT_URLCONF = 'shop.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -129,23 +137,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = '/var/www/mysite.ru/static/'
-MEDIA_ROOT = '/home/borisov/django_store/shop_app/django_shop/media'
+STATIC_ROOT = os.environ.get('STATIC_ROOT') or '/home/borisov/django_store/static'
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT') or '/home/borisov/django_store/shop_app/django_shop/media'
 MEDIA_URL = '/media/'
 
 
 
-AUTH_USER_MODEL = 'client.Client'
+AUTH_USER_MODEL = 'users.User'
 
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-        'LOCATION':'127.0.0.1:11211',
-    }
-}
 
-SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 ############## LOGGING ##############################
 LOGGING = {
@@ -219,16 +220,57 @@ LOGGING = {
 }
 
 
+######### cart #######################
+
+CART_SESSION_KEY = 'orders_'
+ORDER_SESSION_ID = 'order_id'
+
+MAX_CART_SIZE = 100
+
+SESSION_COOKIE_AGE = 1209600
+
+######## Celery ####################
+
+REDIS_HOST = os.environ.get('REDIS_HOST') or '127.0.0.1'
+REDIS_PORT = '6379'
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+print(os.environ.get('REDIS_HOST'))
+########### mail #######
+
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
+EMAIL_USE_SSL = True
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = 465
+
+######### form ###########################
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+################### pay #####################
+
+CUR_CURRENCY = '$'
+CUR_CURRENCY_COD = 'USD'
+
+PAYPAL_RECEIVER_EMAIL = os.environ.get('PAYPAL_RECEIVER_EMAIL')
+PAYPAL_TEST = True
 
 
+STRIPE_SERCRET_KEY =  os.environ.get('STRIPE_SECRET_KEY')
+STRIPE_PUBLISHABLE_KEY =  os.environ.get('STRIPE_PUBLISHABLE_KEY')
+
+################# admin ###############
 
 
+ADMIN_DATE_FORMAT = '%d/%m/%Y %H.%M'
 
+############# prod DB #####################
 
-##############################
-
-try:
+if os.environ.get('PROJECT_ENV') == 'PRODUCTION':
+    from .prod_settings import *
+else:
     from .local_settings import *
-except ImportError:
-    pass
+
+print(os.environ.get('STATIC_ROOT'), os.environ.get('PROJECT_ENV'),)
 

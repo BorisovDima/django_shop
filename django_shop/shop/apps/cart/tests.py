@@ -134,7 +134,7 @@ class TestCartActions(TestCreateProduct, StaticLiveServerTestCase):
         self.driver.find_element_by_xpath('.//div[@id="my-cart-modal"]'
                                           '//tr[@data-id="body-product-cart"]'
                                           '//a[@data-action="delete-cart-product-all"]').click()
-
+        time.sleep(3)
         b = self.wait((lambda _: self.driver.find_element_by_xpath(
             './/div[@id="my-cart-modal"]'
             '//tr[@data-id="body-product-cart"]')))

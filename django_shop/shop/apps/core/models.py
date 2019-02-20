@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from django.utils import timezone
+from django.urls import reverse
 
 from .model_mixins import  ShopMixin, CurrencyBaseShopMixin
 
@@ -60,6 +61,8 @@ class Product(ShopMixin):
     def get_count(self):
         return sum(v.count for v in self.variant_set.all())
 
+    def get_absolute_url(self):
+        return reverse('core:detail-product-main', kwargs={'slug': self.slug})
 
     @property
     def get_size(self):
@@ -68,6 +71,7 @@ class Product(ShopMixin):
     @property
     def get_main_variant(self):
         return self.variant_set.first()
+
 
     class Meta:
         ordering = ['-average_price']

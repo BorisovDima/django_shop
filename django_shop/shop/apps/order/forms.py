@@ -2,7 +2,6 @@ from django.forms import ModelForm, widgets
 
 from .fields import MyChoiceField
 from .models import Shipping
-
 from .models import OrderModel
 
 class OrderForm(ModelForm):

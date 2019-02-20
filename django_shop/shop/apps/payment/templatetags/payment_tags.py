@@ -25,3 +25,8 @@ def paypal(request, order):
     form = PayPalPaymentsForm(initial=paypal_dict)
     return {'form': form}
 
+@register.inclusion_tag('payment/stripe.html')
+def stripe(order):
+    key = settings.STRIPE_PUBLISHABLE_KEY
+    amount, full_amount = order.total_price, int(order.total_price * 100)
+    return {'key': key, 'amount': amount, 'full_amount': full_amount}

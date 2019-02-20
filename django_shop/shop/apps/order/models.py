@@ -48,6 +48,8 @@ class OrderModel(CurrencyBaseShopMixin):
             logger.info('Sales product %s variant %s: sales + %s, count - %s: sales %s, count %s' %
                         (item.type_product, item.variant_product, item.count, item.count,
                          item.variant_product.sales, item.variant_product.count))
+        self.paid = True
+        self.save(update_fields=['paid'])
 
 
     def set_ship_price(self):
@@ -75,6 +77,9 @@ class OrderModel(CurrencyBaseShopMixin):
 
     def get_absolute_url(self):
         return reverse('order:order-pay-page')
+
+    def get_full_name(self):
+        return '%s %s' % (self.first_name, self.last_name)
 
     class Meta:
         ordering = ['-date_create']

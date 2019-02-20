@@ -10,7 +10,6 @@ O_I = settings.ORDER_SESSION_ID
 
 
 class OrderView(CartMixin, CreateView):
-    cart_context = True
     model = OrderModel
     form_class = OrderForm
     template_name = 'order/order_form.html'
@@ -19,9 +18,11 @@ class OrderView(CartMixin, CreateView):
         response = super().form_valid(form)
         self.object.set_items(self.cart)
         self.cart_dispatch(self.request, 'clear')
+
         if self.request.session.get(O_I):
             OrderModel.objects.filter(id=self.request.session[O_I]).delete()
         self.request.session[O_I] = self.object.id
+
         return response
 
 

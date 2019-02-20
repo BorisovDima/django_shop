@@ -54,6 +54,8 @@ $(document).ready(function(){
 var start = getURLParameter(window.location.href, 'page')
 init()
 
+
+
  if (start){
     load_product(start)
  }

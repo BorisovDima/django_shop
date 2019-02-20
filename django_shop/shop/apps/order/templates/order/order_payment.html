@@ -21,6 +21,9 @@
 
 
 {% paypal request object %}
+
+{% stripe object %}
+
 {% endblock %}
 
 
@@ -49,7 +52,7 @@
 
 {% for item in object.orderitem_set.all %}
 
-                                    <tr class="cart-item" data-id="body-product-cart">
+                                   <tr class="cart-item" data-id="body-product-cart">
                                         <td class="align-middle" width="100">
                                             <div class="thumbnail">
                                                 <img class="img-fluid" src="{{ item.type_product.image.url }}">
@@ -62,7 +65,7 @@
 
 
                                             <a class="font-weight-bold text-dark">{{ item.type_product.name }}</a>
-                                             <span class="pl-4">{% widthratio item.price 1 item.count %}{% get_settings 'CUR_CURRENCY' %}</span>
+                                             <span class="pl-4">{{ item.price }}{% get_settings 'CUR_CURRENCY' %}</span>
                                             {% if item.variant_product.size %}
                                                 <ul class="list-unstyled">
                                                     <li>
