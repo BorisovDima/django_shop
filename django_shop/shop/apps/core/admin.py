@@ -19,12 +19,12 @@ class VariantInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(AdminMixin, admin.ModelAdmin):
-    list_display = ('name', 'category', 'brand',  'average_price', 'features', 'get_count', 'average_sales', 'last_sale')
+    list_display = ('name', 'category', 'brand',  'average_price', 'features', 'get_count', 'sales', 'last_sale')
     ordering = ['-variant__sales', '-variant__last_sale']
     inlines = [VariantInline]
     list_filter = ['date_create', 'variant__last_sale']
 
-    def average_sales(self, product):
+    def sales(self, product):
         return str(product.get_sales())
 
     def last_sale(self, product):

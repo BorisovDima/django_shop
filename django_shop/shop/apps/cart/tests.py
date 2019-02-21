@@ -2,22 +2,24 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test.testcases import TestCase
 from django.core.files.base import ContentFile
 
-from selenium.webdriver.firefox.webdriver import WebDriver
+from shop.apps.core.tests import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-
+import socket
 
 from shop.apps.core.models import Product, Variant, Brand, Category
 from .utils import CartObj
 
+import os
 import time
 
-TEST_IMAGE = '/home/borisov/Downloads/preview.jpeg'
+TEST_IMAGE = os.environ.get('TEST_IMG')
 
 
 class TestCreateProduct:
+
 
     def create_product(self, n=1, count=10, price=40, a_p=40):
         brand = Brand.objects.create(name='Test brand %s' % n)
@@ -31,11 +33,16 @@ class TestCreateProduct:
 
 
 class TestCartActions(TestCreateProduct, StaticLiveServerTestCase):
+    # host = os.environ.get('LIVE_TEST_HOST') or 'localhost'
+    host = '0.0.0.0'
 
-    def setUp(self):
-        super().setUp()
-        self.driver = WebDriver()
-        self.create_product()
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.host = socket.gethostbyname(socket.gethostname())
+        cls.driver = WebDriver
+        cls.driver.implicitly_wait(5)
+        cls.create_product(None)
 
 
     def wait(self, expr):
@@ -141,9 +148,9 @@ class TestCartActions(TestCreateProduct, StaticLiveServerTestCase):
 
         self.assertFalse(b, msg='Error: product was not delete after operation delete-all')
 
-
-    def tearDown(self):
-        self.driver.close()
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.close()
 
 class TestCart(TestCreateProduct, TestCase):
 

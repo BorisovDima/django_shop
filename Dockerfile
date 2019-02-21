@@ -3,7 +3,8 @@ FROM ubuntu:16.04
 RUN apt-get update \
   && apt-get install -y python3-pip python3-dev libmysqlclient-dev libcogl-pango-dev  libcairo2-dev  python3-venv \
   && cd /usr/local/bin \
-  && ln -s /usr/bin/python3 python
+  && ln -s /usr/bin/python3 python \
+  && rm -fr /var/lib/apt/lists/*
 
 WORKDIR /project
 

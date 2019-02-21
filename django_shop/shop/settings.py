@@ -32,7 +32,7 @@ load_dotenv(os.path.join(BASE_DIR, os.environ.get('ENV_FILE') or 'django_shop.en
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-print(os.environ.get('HOST'))
+
 
 ALLOWED_HOSTS = [os.environ.get('HOST') or '*']
 
@@ -234,7 +234,6 @@ SESSION_COOKIE_AGE = 1209600
 REDIS_HOST = os.environ.get('REDIS_HOST') or '127.0.0.1'
 REDIS_PORT = '6379'
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
-print(os.environ.get('REDIS_HOST'))
 ########### mail #######
 
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
@@ -272,5 +271,4 @@ if os.environ.get('PROJECT_ENV') == 'PRODUCTION':
 else:
     from .local_settings import *
 
-print(os.environ.get('STATIC_ROOT'), os.environ.get('PROJECT_ENV'),)
 

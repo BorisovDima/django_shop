@@ -11,10 +11,9 @@ class Command(BaseCommand):
         password = os.environ.get('DOCKER_SUPERUSER_PASSWORD')
         email = os.environ.get('DOCKER_SUPERUSER_EMAIL')
         USER = get_user_model()
-        print(name)
-        print(USER.objects.filter(username=name))
         if not USER.objects.filter(username=name).exists():
             USER.objects.create_superuser(username=name, password=password, email=email)
             self.stdout.write('SUPERUSER CREATE!')
         else:
             self.stderr.write('SUPERUSER ALREADY EXISTS!')
+

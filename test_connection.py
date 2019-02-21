@@ -18,7 +18,7 @@ ip = str(args.ip)
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-for _ in range(20):
+for _ in range(100):
     erro = sock.connect_ex((ip, port))
     if erro == 0:
         print('Service %s connect!' % service)

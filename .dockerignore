@@ -4,3 +4,4 @@ docker-compose.yml
 Dockerfile
 mysql_data
 __pycache__
+docker-compose-tests.yml

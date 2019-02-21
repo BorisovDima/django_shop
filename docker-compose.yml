@@ -3,17 +3,20 @@ services:
 
   webapp:
     build: .
+    image: webapp
     depends_on:
         - mysql
         - redis
         - memcached
-    ports:
-      - "8000:8000"
     environment:
       - PROJECT_ENV=PRODUCTION
       - MEMCACHED_HOST=memcached
       - REDIS_HOST=redis
       - HOST=myshop.ru
+      - DB_NAME=django_shop
+      - DB_PASSWORD=123456
+      - DB_USER=Admin
+      - DB_HOST=mysql
     volumes:
       - ./staticfiles:/project/staticfiles
     entrypoint: ["./boot.sh"]
@@ -37,13 +40,14 @@ services:
       - webapp
 
   celery:
-    build: .
+#    build: .
+    image: webapp
     environment:
     - REDIS_HOST=redis
     depends_on:
       - redis
       - webapp
-    command: /bin/bash -c "cd django_shop && celery -A shop worker --hostname=redis -l info"
+    command: /bin/bash -c "cd django_shop && exec celery -A shop worker -l info"
 
   mysql:
     image: mysql
@@ -52,9 +56,9 @@ services:
       - ./etc/mysql_prod.cnf:/etc/mysql/conf.d/mysql_prod.cnf
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=1488
+      - MYSQL_RANDOM_ROOT_PASSWORD=yes
       - MYSQL_DATABASE=django_shop
-#      MYSQL_USER: ----
-#      MYSQL_PASSWORD: ----
+      - MYSQL_USER=Admin
+      - MYSQL_PASSWORD=123456
 
 
