@@ -15,13 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-############### dotenv ############3
-
-from dotenv import load_dotenv
-
-load_dotenv(os.path.join(BASE_DIR, os.environ.get('ENV_FILE') or 'django_shop.env'))
-
-
 
 
 
@@ -30,7 +23,7 @@ load_dotenv(os.path.join(BASE_DIR, os.environ.get('ENV_FILE') or 'django_shop.en
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
-
+print(os.environ.get('SECRET_KEY'), "KKEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
@@ -82,6 +75,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'shop.apps.core.processors.static_version',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',

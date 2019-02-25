@@ -4,21 +4,34 @@ services:
   webapp:
     build: .
     image: webapp
+    env_file:
+      - main.env
     depends_on:
         - mysql
         - redis
         - memcached
-    environment:
-      - PROJECT_ENV=PRODUCTION
-      - MEMCACHED_HOST=memcached
-      - REDIS_HOST=redis
-      - HOST=myshop.ru
-      - DB_NAME=django_shop
-      - DB_PASSWORD=123456
-      - DB_USER=Admin
-      - DB_HOST=mysql
+#    environment:
+#       - STRIPE_PUBLISHABLE_KEY
+#       - STRIPE_SECRET_KEY
+#       - PAYPAL_RECEIVER_EMAIL
+#       - DEFAULT_FROM_EMAIL
+#       - EMAIL_HOST_USER
+#       - EMAIL_HOST_PASSWORD
+#       - SECRET_KEY
+#      - PROJECT_ENV=PRODUCTION
+#      - MEMCACHED_HOST=memcached
+#      - REDIS_HOST=redis
+#      - HOST
+#      - DB_NAME
+#      - DB_PASSWORD
+#      - DB_USER
+#      - DB_HOST=mysql
+#      - DOCKER_SUPERUSER_NAME
+#      - DOCKER_SUPERUSER_PASSWORD
     volumes:
       - ./staticfiles:/project/staticfiles
+      - ./error_docker.log:/project/django_shop/error.log
+      - ./logs_docker.log:/project/django_shop/logs.log
     entrypoint: ["./boot.sh"]
 
   redis:
@@ -40,7 +53,6 @@ services:
       - webapp
 
   celery:
-#    build: .
     image: webapp
     environment:
     - REDIS_HOST=redis
@@ -51,14 +63,16 @@ services:
 
   mysql:
     image: mysql
+    env_file:
+      - main.env
     volumes:
       - ./mysql_data:/var/lib/mysql
       - ./etc/mysql_prod.cnf:/etc/mysql/conf.d/mysql_prod.cnf
     restart: always
-    environment:
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
-      - MYSQL_DATABASE=django_shop
-      - MYSQL_USER=Admin
-      - MYSQL_PASSWORD=123456
+#    environment:
+#      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+#      - MYSQL_DATABASE
+#      - MYSQL_USER
+#      - MYSQL_PASSWORD
 
 

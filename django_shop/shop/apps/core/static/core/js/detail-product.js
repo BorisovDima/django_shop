@@ -28,3 +28,8 @@ $(document).on('change', '#size-change-product', function(obj) {
     $('[data-action="order-product"]').attr('data-id', variant_id)
     $('[data-id="variant-price"]').text(variant_price)
 })
+
+
+
+
+

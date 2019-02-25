@@ -1,8 +1,9 @@
 __pycache__/
 *.manifest
 *.log
-migrations/
+*.env
 !migrations/__init__.py
 collectedstatic/
 mysql_data/
 staticfiles/
+

@@ -49,13 +49,14 @@
 {% block footer %}
 
 
-<script src="{% static 'core/js/post_ajax.js' %}"></script>
-<script src="{% static 'core/js/detail-product.js' %}"></script>
-  <script src="{% static 'core/js/load-products.js' %}" ></script>
 
-  <script src="{% static 'cart/js/delete-from-cart.js' %}" ></script>
-<script src="{% static 'cart/js/check_cart.js' %}"></script>
-<script src="{% static 'cart/js/put-in-cart-product.js' %}"></script>
+<script src="{% get_static_prefix %}{{ post_ajax_js }}"></script>
+<script src="{% get_static_prefix %}{{ detail_product_js }}"></script>
+  <script src="{% get_static_prefix %}{{ load_products_js }}" ></script>
+
+  <script src="{% get_static_prefix %}{{ delete_from_cart_js}}" ></script>
+<script src="{% get_static_prefix %}{{ check_cart_js }}"></script>
+<script src="{% get_static_prefix %}{{ put_in_cart_product_js }}"></script>
 
 {% csrf_token %}
 {% endblock %}
