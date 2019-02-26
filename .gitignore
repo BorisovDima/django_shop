@@ -1,6 +1,8 @@
+error_docker.log
+logs_docker.log
+geckodriver.log
 __pycache__/
 *.manifest
-*.log
 *.env
 !migrations/__init__.py
 collectedstatic/

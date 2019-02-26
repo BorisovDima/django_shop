@@ -12,5 +12,8 @@ python manage.py migrate --fake-initial
 python manage.py dockersuperuser
 python manage.py collectstatic --no-input
 
+touch error.log
+touch logs.log
+
 
 exec gunicorn -b :8000 -w 4 --access-logfile - --error-logfile - shop.wsgi

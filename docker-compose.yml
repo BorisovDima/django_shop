@@ -56,6 +56,8 @@ services:
     image: webapp
     environment:
     - REDIS_HOST=redis
+    env_file:
+      - main.env
     depends_on:
       - redis
       - webapp

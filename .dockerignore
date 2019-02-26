@@ -1,4 +1,6 @@
-*.log
+error_docker.log
+logs_docker.log
+geckodriver.log
 .git
 .gitignore
 docker-compose.yml
