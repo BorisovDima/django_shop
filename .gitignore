@@ -1,6 +1,4 @@
-error_docker.log
-logs_docker.log
-geckodriver.log
+*.log
 __pycache__/
 *.manifest
 *.env
