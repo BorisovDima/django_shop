@@ -14,13 +14,18 @@ import socket, time
 
 
 class TestCartActions(ProductTestMixin, StaticLiveServerTestCase):
+    host = '0.0.0.0'
 
+
+    @classmethod
+    def setUpClass(cls):
+        cls.host = socket.gethostbyname(socket.gethostname())
 
     def setUp(self):
         super().setUpClass()
-        self.host = socket.gethostbyname(socket.gethostname())
         self.driver = WebDriver()
         self.create_product()
+
 
 
     def wait(self, expr):

@@ -30,8 +30,8 @@ services:
 #      - DOCKER_SUPERUSER_PASSWORD
     volumes:
       - ./staticfiles:/project/staticfiles
-      - ./error_docker.log:/project/django_shop/error.log
-      - ./logs_docker.log:/project/django_shop/logs.log
+      - ${PWD}/error_docker.log:/project/django_shop/error.log
+      - ${PWD}/logs_docker.log:/project/django_shop/logs.log
     entrypoint: ["./boot.sh"]
 
   redis:

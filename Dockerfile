@@ -16,6 +16,8 @@ RUN pip3 install --upgrade pip
 RUN pip3 install --upgrade setuptools && \
     pip3 install -r etc/requirements.txt
 
+RUN touch ./django_shop/error.log ./django_shop/logs.log
+
 
 ENV STATIC_ROOT="/project/staticfiles/static" MEDIA_ROOT="/project/staticfiles/media"
 
