@@ -1,6 +1,7 @@
 htmlcov
 .coverage
 *.log
+*.env
 .git
 .gitignore
 docker-compose.yml
