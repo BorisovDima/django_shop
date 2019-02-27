@@ -28,8 +28,11 @@ CACHES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
 DEBUG = False
+
+if not os.environ.get('PROJECT_TEST'):
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 
 
