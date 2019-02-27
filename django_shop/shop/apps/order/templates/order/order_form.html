@@ -43,7 +43,7 @@
 
             {% block form_order %}
 
-                {% if cart_obj.total_price > 0 %}
+                {% if not cart_obj.is_empty %}
                     <form method="POST" action="" >
                         {% csrf_token %}
                         <div class="form-group  ml-4 pl-5">

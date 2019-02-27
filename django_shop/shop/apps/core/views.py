@@ -1,8 +1,6 @@
 from django.views.generic import DetailView
 from django_filters.views import FilterView
 from django.template.loader import render_to_string
-from django.views.decorators.vary import vary_on_headers
-
 
 from .filters import ProductFilter
 from .mixins import KeyFromQueryStringMixin, JsonResponseMixin

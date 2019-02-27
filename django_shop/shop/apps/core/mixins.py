@@ -5,7 +5,6 @@ class JsonResponseMixin:
 
     def dispatch(self, request, *args, **kwargs):
         data = super().dispatch(request, *args, **kwargs)
-        data['Vary'] = 'user-agent'
         return data if not request.is_ajax() else JsonResponse(data)
 
 

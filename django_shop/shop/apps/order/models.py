@@ -40,7 +40,7 @@ class OrderModel(CurrencyBaseShopMixin):
                                         null=True)
 
     def make_sales(self):
-        for item in self.orderitem_set.all():
+        for item in self.orderitem_set.all().select_related('variant_product'):
             item.variant_product.sales += item.count
             item.variant_product.count -= item.count
             item.variant_product.last_sale = timezone.now()

@@ -1,3 +1,5 @@
+htmlcov
+.coverage
 *.log
 __pycache__/
 *.manifest

@@ -3,7 +3,7 @@ from django.template.loader import render_to_string
 
 
 import csv
-from weasyprint import HTML, CSS
+from weasyprint import HTML
 
 class BaseExport:
     content_type_export = None

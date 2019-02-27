@@ -18,8 +18,8 @@ class CartObj:
         if not self.items:
             pk = [key for key, _ in self]
             self.items = Variant.objects.filter(id__in=pk)
-        for p in self.items:
-            yield p, self.orders[str(p.id)], self.exceed(p)
+        for v in self.items:
+            yield v, self.orders[str(v.id)], self.exceed(v)
 
     def __iter__(self):
        yield from self.orders.items()
@@ -52,6 +52,9 @@ class CartObj:
 
     def count_order(self, id):
         return self.orders.get(str(id))
+
+    def is_empty(self):
+        return not bool(self.orders)
 
     @property
     def count(self):

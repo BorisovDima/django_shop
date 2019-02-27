@@ -15,7 +15,11 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+############## debug env ############
 
+if os.environ.get('PROJECT_ENV') != 'PRODUCTION':
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(BASE_DIR, 'debug_env.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -75,7 +79,6 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'shop.apps.core.processors.static_version',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -131,11 +134,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.environ.get('STATIC_ROOT') or '/home/borisov/django_store/static'
-MEDIA_ROOT = os.environ.get('MEDIA_ROOT') or '/home/borisov/django_store/shop_app/django_shop/media'
+STATIC_ROOT = os.environ.get('STATIC_ROOT')
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT')
 MEDIA_URL = '/media/'
-
-
 
 AUTH_USER_MODEL = 'users.User'
 
@@ -225,7 +226,7 @@ SESSION_COOKIE_AGE = 1209600
 
 ######## Celery ####################
 
-REDIS_HOST = os.environ.get('REDIS_HOST') or '127.0.0.1'
+REDIS_HOST = os.environ.get('REDIS_HOST')
 REDIS_PORT = '6379'
 CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
 ########### mail #######
@@ -257,6 +258,7 @@ STRIPE_PUBLISHABLE_KEY =  os.environ.get('STRIPE_PUBLISHABLE_KEY')
 
 
 ADMIN_DATE_FORMAT = '%d/%m/%Y %H.%M'
+
 
 ############# prod DB #####################
 

@@ -6,6 +6,7 @@ from .models import OrderModel
 from shop.apps.cart.mixins import CartMixin
 from .forms import OrderForm
 
+
 O_I = settings.ORDER_SESSION_ID
 
 
@@ -15,6 +16,9 @@ class OrderView(CartMixin, CreateView):
     template_name = 'order/order_form.html'
 
     def form_valid(self, form):
+        if self.cart.is_empty():
+            return self.form_invalid(form)
+
         response = super().form_valid(form)
         self.object.set_items(self.cart)
         self.cart_dispatch(self.request, 'clear')

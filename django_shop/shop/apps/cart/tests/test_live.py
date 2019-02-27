@@ -1,48 +1,26 @@
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
-from django.test.testcases import TestCase
-from django.core.files.base import ContentFile
 
-from shop.apps.core.tests import WebDriver
+from shop.apps.core.tests.main import WebDriver, ProductTestMixin
+
+
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-import socket
 
-from shop.apps.core.models import Product, Variant, Brand, Category
-from .utils import CartObj
-
-import os
-import time
-
-TEST_IMAGE = os.environ.get('TEST_IMG')
-
-
-class TestCreateProduct:
-
-
-    def create_product(self, n=1, count=10, price=40, a_p=40):
-        brand = Brand.objects.create(name='Test brand %s' % n)
-        category = Category.objects.create(name='Test category %s' % n)
-        image = open(TEST_IMAGE, 'rb').read()
-        image = ContentFile(image)
-        product = Product.objects.create(category=category, brand=brand, name='test product% s' % n, average_price=a_p)
-        product.image.save('test_photo.jpg', image)
-        Variant.objects.create(product=product, count=count, price=price, size='L')
+import socket, time
 
 
 
-class TestCartActions(TestCreateProduct, StaticLiveServerTestCase):
-    # host = os.environ.get('LIVE_TEST_HOST') or 'localhost'
-    host = '0.0.0.0'
 
-    @classmethod
-    def setUpClass(cls):
+class TestCartActions(ProductTestMixin, StaticLiveServerTestCase):
+
+
+    def setUp(self):
         super().setUpClass()
-        cls.host = socket.gethostbyname(socket.gethostname())
-        cls.driver = WebDriver
-        cls.driver.implicitly_wait(5)
-        cls.create_product(None)
+        self.host = socket.gethostbyname(socket.gethostname())
+        self.driver = WebDriver()
+        self.create_product()
 
 
     def wait(self, expr):
@@ -148,77 +126,6 @@ class TestCartActions(TestCreateProduct, StaticLiveServerTestCase):
 
         self.assertFalse(b, msg='Error: product was not delete after operation delete-all')
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.close()
 
-class TestCart(TestCreateProduct, TestCase):
-
-    def setUp(self):
-        super().setUp()
-        self.count_variants = 30
-        for i in range(1, self.count_variants+1):
-            self.create_product(n=i, count=i+1, price=i*4)
-
-
-    def test_cart(self):
-        cart = CartObj(self.client)
-        for v in Variant.objects.all():
-            for i in range(v.count):
-                cart.action('add', v.id)
-
-        # Количество товаров в корзине
-        self.assertTrue(cart.count == sum(i+1 for i in range(1, self.count_variants+1)), 'cart count error')
-
-        cart.action('add', v.id) # Добавили еще одну единицу последнего товара в корзину, но на складе нет такого кол-ва
-        exceed = v.price * v.count
-
-        """
-        Сумма всех товаров в которую не входит сумма последнего товара
-        кол-во которого превышает кол-во единиц товара на складе
-        """
-        cart_price, expected_price = cart.total_price, \
-                                     sum((i*4)*(i+1) for i in range(1, self.count_variants+1))-exceed
-
-        self.assertTrue(cart_price == expected_price, 'cart total price error: expected %s instead %s' %
-                        (cart_price, expected_price))
-
-        self.assertTrue(cart.count == sum(i + 1 for i in range(1, self.count_variants + 1))+1, 'add: cart count error')
-
-        # удаление товара, который был exceed
-        cart.action('delete', v.id)
-        self.assertTrue(cart.count == sum(i+1 for i in range(1, self.count_variants+1)), 'delete: cart count error')
-
-        #еще раз
-        price_one_p = 1 * v.price
-        cart.action('delete', v.id)
-        cart_price, expected_price = cart.total_price, \
-                                     sum((i*4)*(i+1) for i in range(1, self.count_variants+1))-price_one_p
-        self.assertTrue(cart_price == expected_price, 'cart total price error: expected %s instead %s' %
-                        (cart_price, expected_price))
-
-        # Вернул обратно
-        cart.action('add', v.id)
-        # узнал сколько осталось ед. текущего товара и высчитал их полную стоимость и кол-во
-        count = cart.count_order(v.id)
-        all_price = v.price * count
-        cart.action('delete_all', v.id)
-        self.assertTrue(cart.count ==
-                        sum(i + 1 for i in range(1, self.count_variants + 1))-count, 'delete_all: cart count error')
-
-        cart_price, expected_price = \
-            cart.total_price, sum((i * 4) * (i + 1) for i in range(1, self.count_variants + 1))-all_price
-
-        self.assertTrue(cart_price == expected_price, 'cart total price error: expected %s instead %s' %
-                        (cart_price, expected_price))
-
-        # Полностью очистил корзину
-        cart.action('clear', None)
-        self.assertTrue(cart.count == 0, 'clear: count')
-        self.assertTrue(cart.total_price == 0, 'clear: total')
-        self.assertFalse(len(cart.orders), 'clear: len')
-
-
-
-
-
+    def tearDown(self):
+        self.driver.close()

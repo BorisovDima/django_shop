@@ -16,6 +16,7 @@ class OrderForm(ModelForm):
 
     shipping = MyChoiceField(queryset=Shipping.objects.all(), empty_label=None, widget=widgets.RadioSelect())
 
+
     class Meta:
         model = OrderModel
         fields = ['first_name', 'last_name', 'address', 'country', 'city', 'postal_code', 'email', 'shipping']

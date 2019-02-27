@@ -16,7 +16,7 @@ DATABASES = {
     }
 }
 
-MEMCACHED_HOST = os.environ.get('MEMCACHED_HOST') or '127.0.0.1'
+MEMCACHED_HOST = os.environ.get('MEMCACHED_HOST')
 
 CACHES = {
     'default': {
@@ -28,6 +28,7 @@ CACHES = {
 SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
 
 
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 DEBUG = False
 
 

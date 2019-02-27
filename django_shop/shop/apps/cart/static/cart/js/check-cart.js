@@ -16,4 +16,7 @@ $('#my-cart').on('click', function(){
 
 $('#my-cart-modal').on('hide.bs.modal', function() {
     $("#my-cart-modal").html('')
+
+
+
 })
